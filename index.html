@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Integrated Data Graphs and Plots Showcase</title>
+  <title>NSW Data Graphs & Plots Showcase</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@4.0.1/build/Chart.BoxPlot.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     .chart-container { display: flex; flex-wrap: wrap; }
     .chart-block { margin: 18px; width: 420px; }
-    pre { background: #f7f7f7; padding: 10px; border-radius: 4px; font-size: 1.05em;}
+    pre { background: #f7f7f7; padding: 10px; border-radius: 4px; font-size: 1em;}
     .title { font-weight: bold; margin-bottom: 4px; }
     .desc { font-size: 0.95em; color: #555; }
     svg.venn-svg { margin-top: 14px; }
+    .dots-container {margin-top:10px;}
+    .dot {display:inline-block; width:8px; height:8px; border-radius:50%; background:#2ecc40; margin:2px;}
+    .dot-row {margin-bottom:2px;}
   </style>
 </head>
 <body>
@@ -19,15 +22,15 @@
 <div class="chart-container">
 
   <div class="chart-block">
-    <div class="title">Bar Graph (Horizontal, Discrete Data)</div>
+    <div class="title">Bar Chart (Horizontal)</div>
     <canvas id="barChart"></canvas>
     <div class="desc">Compare discrete categories. Bars separated.</div>
   </div>
 
   <div class="chart-block">
-    <div class="title">Column Graph (Vertical)</div>
+    <div class="title">Column Chart (Vertical)</div>
     <canvas id="columnChart"></canvas>
-    <div class="desc">Vertical bars, like bar graph, for discrete categories.</div>
+    <div class="desc">Vertical bars for discrete categories.</div>
   </div>
 
   <div class="chart-block">
@@ -39,13 +42,13 @@
   <div class="chart-block">
     <div class="title">Pie Chart</div>
     <canvas id="pieChart"></canvas>
-    <div class="desc">Portions/percent of a whole.</div>
+    <div class="desc">Portions/percentages of a whole.</div>
   </div>
 
   <div class="chart-block">
-    <div class="title">Histogram (No Gaps)</div>
+    <div class="title">Histogram (Continuous, No Gaps)</div>
     <canvas id="histChart"></canvas>
-    <div class="desc">Distribution of continuous numerical data (bins adjacent).</div>
+    <div class="desc">Distribution of continuous data in bins (bars adjacent).</div>
   </div>
 
   <div class="chart-block">
@@ -57,42 +60,42 @@
   <div class="chart-block">
     <div class="title">Area Graph</div>
     <canvas id="areaChart"></canvas>
-    <div class="desc">Quantities over time, area filled under line.</div>
+    <div class="desc">Quantities over time, area filled beneath the line.</div>
   </div>
 
   <div class="chart-block" id="bubbleDiv">
     <div class="title">Bubble Chart</div>
-    <div class="desc">Visualises three variables: x, y, size.</div>
+    <div class="desc">Three variables visualised: x, y, bubble size.</div>
   </div>
 
   <div class="chart-block">
-    <div class="title">Dot Plot</div>
-    <canvas id="dotPlot"></canvas>
-    <div class="desc">Uses dots for frequencies/values.</div>
+    <div class="title">Dot Plot (Frequency Dot Plot)</div>
+    <div id="dotPlotContainer" class="dots-container"></div>
+    <div class="desc">Each row shows count of dots for each value.</div>
   </div>
 
   <div class="chart-block">
     <div class="title">Box and Whisker Plot (Box Plot)</div>
     <canvas id="boxPlot"></canvas>
-    <div class="desc">Spread, quartiles, median, outliers.</div>
+    <div class="desc">Shows spread, quartiles, median, outliers.</div>
   </div>
 
   <div class="chart-block">
     <div class="title">Stem-and-Leaf Plot</div>
     <pre id="stemLeaf"></pre>
-    <div class="desc">Distribution, keeps actual values.</div>
+    <div class="desc">Splits data into stems/leaves; preserves values.</div>
   </div>
 
   <div class="chart-block">
     <div class="title">Frequency Polygon</div>
     <canvas id="freqPoly"></canvas>
-    <div class="desc">Line connecting midpoints of histogram bins.</div>
+    <div class="desc">Line graph connecting midpoints of histogram bins.</div>
   </div>
 
   <div class="chart-block">
     <div class="title">Time Series Graph</div>
     <canvas id="timeSeries"></canvas>
-    <div class="desc">Data over intervals/time.</div>
+    <div class="desc">Values plotted chronologically.</div>
   </div>
 
   <div class="chart-block">
@@ -110,9 +113,8 @@
   <div class="chart-block">
     <div class="title">Pareto Chart</div>
     <canvas id="paretoChart"></canvas>
-    <div class="desc">Bar chart sorted, cumulative % shows overall effect.</div>
+    <div class="desc">Bar chart sorted, cumulative % overlays overall effect.</div>
   </div>
-
 </div>
 
 <script>
@@ -122,8 +124,11 @@ const values = [23, 45, 12, 30];
 const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45];
 const times = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const timeSeries = [5, 10, 7, 13, 9, 14];
+// For frequency dot plot
+const frequencyMap = {};
+numericData.forEach(v => frequencyMap[v] = (frequencyMap[v]||0) + 1);
 
-// 1. Bar Graph (Horizontal)
+// 1. Bar Chart (Horizontal)
 new Chart(document.getElementById('barChart'), {
   type: 'bar',
   data: {
@@ -139,7 +144,7 @@ new Chart(document.getElementById('barChart'), {
   }
 );
 
-// 2. Column Graph (Vertical)
+// 2. Column Chart (Vertical)
 new Chart(document.getElementById('columnChart'), {
   type: 'bar',
   data: {
@@ -271,26 +276,21 @@ Plotly.newPlot('bubbleDiv', [{
   }
 }], {margin:{t:10}, title:'Bubble Chart', xaxis:{title:'X'}, yaxis:{title:'Y'}});
 
-// 9. Dot Plot
-const dotPoints = numericData.map((v,i) => ({
-  x: v, y: 1 + (i % 10) * 0.18
-}));
-new Chart(document.getElementById('dotPlot'), {
-  type: 'scatter',
-  data: {
-    datasets: [{
-      label: 'Dot Plot',
-      data: dotPoints,
-      backgroundColor: 'rgb(100,200,100)'
-    }]
-  },
-  options: {
-    plugins: { legend: { display: false }},
-    scales: {
-      x: { title: { display: true, text: 'Value' }, min: Math.min(...numericData)-1, max: Math.max(...numericData)+1 },
-      y: { display: false }
-    }
+// 9. Dot Plot - Frequency Dot Plot (each value, stacked dots)
+const dotPlotContainer = document.getElementById('dotPlotContainer');
+Object.keys(frequencyMap).sort((a,b)=>a-b).forEach(val => {
+  let row = document.createElement('div');
+  row.className = 'dot-row';
+  let label = document.createElement('span');
+  label.style.marginRight = "8px";
+  label.textContent = val + ": ";
+  row.appendChild(label);
+  for(let i=0;i<frequencyMap[val];i++) {
+    let dot = document.createElement('span');
+    dot.className = 'dot';
+    row.appendChild(dot);
   }
+  dotPlotContainer.appendChild(row);
 });
 
 // 10. Box and Whisker Plot (Box Plot)
@@ -321,7 +321,7 @@ function stemLeaf(data) {
     stems[stem].push(leaf);
   });
   let text = 'Stem | Leaves\n------------\n';
-  Object.keys(stems).sort().forEach(stem => {
+  Object.keys(stems).sort((a,b)=>a-b).forEach(stem => {
     text += `${stem}    | ${stems[stem].join(' ')}\n`;
   });
   return text;
