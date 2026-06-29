@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>NSW Data Graphs & Plots Showcase</title>
+  <title>Integrated Data Graphs and Plots: All Types</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@4.0.1/build/Chart.BoxPlot.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -74,24 +74,28 @@
     <div class="desc">Each row shows count of dots for each value.</div>
   </div>
 
+  <!-- Added: Box and Whisker Plot -->
   <div class="chart-block">
     <div class="title">Box and Whisker Plot (Box Plot)</div>
     <canvas id="boxPlot"></canvas>
     <div class="desc">Shows spread, quartiles, median, outliers.</div>
   </div>
 
+  <!-- Added: Stem-and-Leaf Plot -->
   <div class="chart-block">
     <div class="title">Stem-and-Leaf Plot</div>
     <pre id="stemLeaf"></pre>
     <div class="desc">Splits data into stems/leaves; preserves values.</div>
   </div>
 
+  <!-- Added: Frequency Polygon -->
   <div class="chart-block">
     <div class="title">Frequency Polygon</div>
     <canvas id="freqPoly"></canvas>
     <div class="desc">Line graph connecting midpoints of histogram bins.</div>
   </div>
 
+  <!-- Added: Time Series Graph -->
   <div class="chart-block">
     <div class="title">Time Series Graph</div>
     <canvas id="timeSeries"></canvas>
@@ -110,6 +114,7 @@
     <div class="desc">Relationships/intersection between sets.</div>
   </div>
 
+  <!-- Added: Pareto Chart -->
   <div class="chart-block">
     <div class="title">Pareto Chart</div>
     <canvas id="paretoChart"></canvas>
