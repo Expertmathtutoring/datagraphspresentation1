@@ -1,106 +1,157 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Clarified Data Graphs & Plots Showcase</title>
+  <title>Integrated Data Graph Showcase</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Box Plot Plugin for Chart.js -->
+  <!-- Chart.js Box Plot Plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@4.0.1/build/Chart.BoxPlot.min.js"></script>
   <style>
-    .chart-container {display:flex;flex-wrap:wrap;}
-    .chart-block {margin:18px;width:430px;}
-    pre {background:#f7f7f7;padding:10px;border-radius:4px;}
+    .chart-container { display: flex; flex-wrap: wrap; }
+    .chart-block { margin: 18px; width: 430px; }
+    pre { background: #f7f7f7; padding: 10px; border-radius: 4px; font-size: 1.1em;}
+    .title { font-weight: bold; margin-bottom: 4px; }
+    .desc { font-size: 0.95em; color: #555; }
   </style>
 </head>
 <body>
-  <h2>Clarified Data Graphs & Plots Showcase</h2>
+  <h2>Integrated Data Graph Showcase</h2>
   <div class="chart-container">
-
-    <!-- Column Graph (Bar Chart): Categorical -->
+    <!-- Column Graph -->
     <div class="chart-block">
+      <div class="title">Column Graph (Bar Chart) - Categorical Data</div>
       <canvas id="columnChart"></canvas>
-      <b>Column Graph (Vertical Bar Chart)</b>
-      <p>Displays frequency or value for discrete categories.</p>
+      <div class="desc">Vertical bars for discrete categories; bars separated.</div>
     </div>
 
-    <!-- Histogram: Continuous Data -->
+    <!-- Histogram -->
     <div class="chart-block">
+      <div class="title">Histogram - Continuous Data</div>
       <canvas id="histChart"></canvas>
-      <b>Histogram</b>
-      <p>Displays frequency of values in numeric intervals/bins (continuous data).</p>
+      <div class="desc">Adjacent bars for numeric intervals; no gaps between bars.</div>
     </div>
 
-    <!-- Stem-and-Leaf Plot -->
+    <!-- Box and Whisker Plot -->
     <div class="chart-block">
-      <b>Stem-and-Leaf Plot</b>
-      <pre id="stemLeaf"></pre>
-      <p>Shows distribution while preserving actual values.</p>
+      <div class="title">Box and Whisker Plot</div>
+      <canvas id="boxPlot"></canvas>
+      <div class="desc">Shows quartiles, median, spread, and outliers.</div>
     </div>
 
     <!-- Dot Plot -->
     <div class="chart-block">
+      <div class="title">Dot Plot</div>
       <canvas id="dotPlot"></canvas>
-      <b>Dot Plot</b>
-      <p>Each dot represents an individual value.</p>
+      <div class="desc">Each dot represents an individual data value.</div>
     </div>
 
-    <!-- Box-and-Whisker Plot -->
+    <!-- Stem-and-Leaf Plot -->
     <div class="chart-block">
-      <canvas id="boxPlot"></canvas>
-      <b>Box and Whisker Plot</b>
-      <p>Visualises spread, quartiles, median and outliers.</p>
+      <div class="title">Stem-and-Leaf Plot</div>
+      <pre id="stemLeaf"></pre>
+      <div class="desc">Shows distribution while preserving original values.</div>
     </div>
-
   </div>
 
 <script>
 // Sample Data
 const categories = ['A', 'B', 'C', 'D'];
-const values = [23, 45, 12, 30];                         // For categorical (column graph)
-const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45]; // For histogram, dot, stem-leaf, boxplot
+const values = [23, 45, 12, 30];                         // For Column Graph
+const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45]; // For Histogram, Dot, Box, Stem-and-Leaf
 
-// Column Graph (discrete categories)
+// Column Graph: Discrete Categories
 new Chart(document.getElementById('columnChart'), {
   type: 'bar',
   data: {
     labels: categories,
     datasets: [{
-      label: 'Counts',
+      label: 'Count',
       data: values,
-      backgroundColor: 'rgba(91, 192, 222, 0.7)'
+      backgroundColor: 'rgba(91,192,222,0.7)'
     }]
   },
   options: {
-    plugins: {legend: {display:false}},
-    scales: {x: {title:{display:true,text:'Category'}}, y: {title:{display:true,text:'Value'},beginAtZero:true}}
+    plugins: { legend: { display: false }},
+    scales: { 
+      x: { title: { display: true, text: 'Category' }},
+      y: { title: { display: true, text: 'Value'}, beginAtZero: true }
+    }
   }
 });
 
-// Histogram (continuous data, bins)
-const binEdges = [10, 20, 30, 40, 50];
+// Histogram: Continuous Data, No Gaps
+const binRanges = ['10-19','20-29','30-39','40-49'];
 const histCounts = [
-  numericData.filter(x => x >=10 && x <20).length,
-  numericData.filter(x => x >=20 && x <30).length,
-  numericData.filter(x => x >=30 && x <40).length,
-  numericData.filter(x => x >=40 && x <50).length
+  numericData.filter(x => x >=10 && x<20).length,
+  numericData.filter(x => x >=20 && x<30).length,
+  numericData.filter(x => x >=30 && x<40).length,
+  numericData.filter(x => x >=40 && x<50).length
 ];
-const histLabels = ['10-19','20-29','30-39','40-49'];
 new Chart(document.getElementById('histChart'), {
   type: 'bar',
   data: {
-    labels: histLabels,
+    labels: binRanges,
     datasets: [{
       label: 'Frequency',
       data: histCounts,
-      backgroundColor: 'rgba(231, 76, 60, 0.7)'
+      backgroundColor: 'rgba(231,76,60,0.7)',
+      borderWidth: 1
     }]
   },
   options: {
-    plugins: {legend: {display:false}},
-    scales: {x: {title:{display:true,text:'Range'}}, y: {title:{display:true,text:'Count'},beginAtZero:true}}
+    plugins: { legend: { display: false }},
+    scales: { 
+      x: { 
+        title: { display: true, text: 'Interval/Bin' },
+        // No grouping, no category spacing (these settings remove gaps)
+        grid: { display: false }
+      },
+      y: { title: { display: true, text: 'Count' }, beginAtZero: true },
+    },
+    categoryPercentage: 1.0, // these options help ensure bars are adjacent
+    barPercentage: 1.0,
   }
 });
 
-// Stem-and-Leaf Plot (text representation)
+// Box and Whisker Plot
+new Chart(document.getElementById('boxPlot'), {
+  type: 'boxplot',
+  data: {
+    labels: ['Sample'],
+    datasets: [{
+      label: 'Data',
+      data: [numericData],
+      backgroundColor: 'rgba(255,188,66,0.7)'
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: { y: { title: { display: true, text: 'Value'}, beginAtZero: false } }
+  }
+});
+
+// Dot Plot: Each value shown as a dot (simulate using scatter plot)
+const dotPoints = numericData.map((v,i) => ({
+  x: v, y: 1 + (i % 10) * 0.18 // Rash offset for vertical stacking
+}));
+new Chart(document.getElementById('dotPlot'), {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      label: 'Dot Plot',
+      data: dotPoints,
+      backgroundColor: 'rgb(100,200,100)'
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: {
+      x: { title: { display: true, text: 'Value' }, min: Math.min(...numericData)-1, max: Math.max(...numericData)+1 },
+      y: { display: false }
+    }
+  }
+});
+
+// Stem-and-Leaf Plot: Improved display (true-to-form)
 function stemLeaf(data) {
   let sorted = data.slice().sort((a,b)=>a-b);
   let stems = {};
@@ -117,43 +168,6 @@ function stemLeaf(data) {
   return text;
 }
 document.getElementById('stemLeaf').textContent = stemLeaf(numericData);
-
-// Dot Plot (each value is a dot in a scatter chart)
-const dotPoints = numericData.map((v,i) => ({x:v, y:1 + (i%10)*0.15}));
-new Chart(document.getElementById('dotPlot'), {
-  type: 'scatter',
-  data: {
-    datasets: [{
-      label: 'Dot Plot',
-      data: dotPoints,
-      backgroundColor: 'rgb(100, 200, 100)'
-    }]
-  },
-  options: {
-    plugins:{legend:{display:false}},
-    scales: {
-      x: { title:{display:true,text:'Value'}, min: Math.min(...numericData)-1, max: Math.max(...numericData)+1 },
-      y: { display:false }
-    }
-  }
-});
-
-// Box-and-Whisker Plot
-new Chart(document.getElementById('boxPlot'), {
-  type: 'boxplot',
-  data: {
-    labels: ['Data'],
-    datasets: [{
-      label: 'Data',
-      data: [numericData],
-      backgroundColor: 'rgba(255,188,66,0.7)'
-    }]
-  },
-  options: {
-    plugins: {legend:{display:false}},
-    scales: {y: {title:{display:true,text:'Value'}}}
-  }
-});
 
 </script>
 </body>
