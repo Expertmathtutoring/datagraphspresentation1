@@ -1,297 +1,160 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Integrated Data Graphs and Plots</title>
+  <title>Clarified Data Graphs & Plots Showcase</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Box Plot Plugin for Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@4.0.1/build/Chart.BoxPlot.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
-    .chart-container { display: flex; flex-wrap: wrap; }
-    .chart-block { margin: 16px; width: 440px;}
-    pre { background: #f7f7f7; padding: 10px; border-radius: 4px;}
-    .venn-svg {margin-top: 20px;}
+    .chart-container {display:flex;flex-wrap:wrap;}
+    .chart-block {margin:18px;width:430px;}
+    pre {background:#f7f7f7;padding:10px;border-radius:4px;}
   </style>
 </head>
 <body>
-<h2>Integrated Data Graphs and Plots</h2>
-<div class="chart-container">
-  <!-- Chart canvases -->
-  <div class="chart-block"><canvas id="barChart"></canvas><b>Bar Graph</b></div>
-  <div class="chart-block"><canvas id="columnChart"></canvas><b>Column Graph</b></div>
-  <div class="chart-block"><canvas id="lineChart"></canvas><b>Line Graph</b></div>
-  <div class="chart-block"><canvas id="pieChart"></canvas><b>Pie Chart</b></div>
-  <div class="chart-block"><canvas id="histChart"></canvas><b>Histogram</b></div>
-  <div class="chart-block"><canvas id="scatterChart"></canvas><b>Scatter Plot</b></div>
-  <div class="chart-block"><canvas id="areaChart"></canvas><b>Area Graph</b></div>
-  <div class="chart-block" id="bubbleDiv"><b>Bubble Chart</b></div>
-  <div class="chart-block"><canvas id="dotChart"></canvas><b>Dot Plot</b></div>
-  <div class="chart-block"><canvas id="boxChart"></canvas><b>Box & Whisker Plot</b></div>
-  <div class="chart-block">
-    <b>Stem-and-Leaf Plot</b>
-    <pre id="stemLeaf"></pre>
+  <h2>Clarified Data Graphs & Plots Showcase</h2>
+  <div class="chart-container">
+
+    <!-- Column Graph (Bar Chart): Categorical -->
+    <div class="chart-block">
+      <canvas id="columnChart"></canvas>
+      <b>Column Graph (Vertical Bar Chart)</b>
+      <p>Displays frequency or value for discrete categories.</p>
+    </div>
+
+    <!-- Histogram: Continuous Data -->
+    <div class="chart-block">
+      <canvas id="histChart"></canvas>
+      <b>Histogram</b>
+      <p>Displays frequency of values in numeric intervals/bins (continuous data).</p>
+    </div>
+
+    <!-- Stem-and-Leaf Plot -->
+    <div class="chart-block">
+      <b>Stem-and-Leaf Plot</b>
+      <pre id="stemLeaf"></pre>
+      <p>Shows distribution while preserving actual values.</p>
+    </div>
+
+    <!-- Dot Plot -->
+    <div class="chart-block">
+      <canvas id="dotPlot"></canvas>
+      <b>Dot Plot</b>
+      <p>Each dot represents an individual value.</p>
+    </div>
+
+    <!-- Box-and-Whisker Plot -->
+    <div class="chart-block">
+      <canvas id="boxPlot"></canvas>
+      <b>Box and Whisker Plot</b>
+      <p>Visualises spread, quartiles, median and outliers.</p>
+    </div>
+
   </div>
-  <div class="chart-block"><canvas id="freqPolyChart"></canvas><b>Frequency Polygon</b></div>
-  <div class="chart-block"><canvas id="timeSeriesChart"></canvas><b>Time Series Graph</b></div>
-  <div class="chart-block">
-    <b>Venn Diagram</b>
-    <svg width="300" height="180" class="venn-svg">
-      <ellipse cx="110" cy="100" rx="80" ry="55" fill="#ffb3a7" fill-opacity="0.5"/>
-      <ellipse cx="190" cy="100" rx="80" ry="55" fill="#a7ceff" fill-opacity="0.5"/>
-      <text x="80" y="60" font-size="16">A</text>
-      <text x="185" y="60" font-size="16">B</text>
-      <text x="140" y="100" font-size="16">A ∩ B</text>
-    </svg>
-  </div>
-  <div class="chart-block"><canvas id="paretoChart"></canvas><b>Pareto Chart</b></div>
-</div>
 
 <script>
+// Sample Data
 const categories = ['A', 'B', 'C', 'D'];
-const values = [23, 45, 12, 30];
-const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45];
-const times = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-const timeSeries = [5, 10, 7, 13, 9, 14];
+const values = [23, 45, 12, 30];                         // For categorical (column graph)
+const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45]; // For histogram, dot, stem-leaf, boxplot
 
-// Bar Chart (horizontal)
-new Chart(document.getElementById('barChart'), {
-  type: 'bar',
-  data: {
-    labels: categories,
-    datasets: [{
-      label: 'Bar Graph',
-      data: values,
-      backgroundColor: 'rgba(102, 179, 255, 0.6)'
-    }]
-  },
-  options: {indexAxis: 'y'}
-});
-
-// Column Chart (vertical bar)
+// Column Graph (discrete categories)
 new Chart(document.getElementById('columnChart'), {
   type: 'bar',
   data: {
     labels: categories,
     datasets: [{
-      label: 'Column Graph',
+      label: 'Counts',
       data: values,
-      backgroundColor: 'rgba(255, 179, 102, 0.7)'
+      backgroundColor: 'rgba(91, 192, 222, 0.7)'
     }]
+  },
+  options: {
+    plugins: {legend: {display:false}},
+    scales: {x: {title:{display:true,text:'Category'}}, y: {title:{display:true,text:'Value'},beginAtZero:true}}
   }
 });
 
-// Line Graph
-new Chart(document.getElementById('lineChart'), {
-  type: 'line',
-  data: {
-    labels: categories,
-    datasets: [{
-      label: 'Line Graph',
-      data: values,
-      borderColor: 'green',
-      fill: false,
-      tension: 0.1
-    }]
-  }
-});
-
-// Pie Chart
-new Chart(document.getElementById('pieChart'), {
-  type: 'pie',
-  data: {
-    labels: categories,
-    datasets: [{
-      label: 'Pie Chart',
-      data: values,
-      backgroundColor: ['#ff9999','#66b3ff','#99ff99','#ffcc99']
-    }]
-  }
-});
-
-// Histogram (bar chart version)
-const histBins = [10, 20, 30, 40, 50];
+// Histogram (continuous data, bins)
+const binEdges = [10, 20, 30, 40, 50];
 const histCounts = [
-  numericData.filter(x => x < 20).length,
-  numericData.filter(x => x >= 20 && x < 30).length,
-  numericData.filter(x => x >= 30 && x < 40).length,
-  numericData.filter(x => x >= 40 && x < 50).length,
-  numericData.filter(x => x >= 50).length
+  numericData.filter(x => x >=10 && x <20).length,
+  numericData.filter(x => x >=20 && x <30).length,
+  numericData.filter(x => x >=30 && x <40).length,
+  numericData.filter(x => x >=40 && x <50).length
 ];
+const histLabels = ['10-19','20-29','30-39','40-49'];
 new Chart(document.getElementById('histChart'), {
   type: 'bar',
   data: {
-    labels: histBins.map(b => b + '+'),
+    labels: histLabels,
     datasets: [{
-      label: 'Histogram',
+      label: 'Frequency',
       data: histCounts,
-      backgroundColor: 'purple'
-    }]
-  }
-});
-
-// Scatter Plot
-new Chart(document.getElementById('scatterChart'), {
-  type: 'scatter',
-  data: {
-    datasets: [{
-      label: 'Scatter Plot',
-      data: [
-        {x: 1, y: 23}, {x: 2, y: 45}, {x: 3, y: 12}, {x: 4, y: 30}
-      ],
-      backgroundColor: 'red'
+      backgroundColor: 'rgba(231, 76, 60, 0.7)'
     }]
   },
   options: {
-    scales: {
-      x: {type: 'linear', position: 'bottom', title: {display:true,text:'X'}},
-      y: {title:{display:true,text:'Y'}}
-    }
+    plugins: {legend: {display:false}},
+    scales: {x: {title:{display:true,text:'Range'}}, y: {title:{display:true,text:'Count'},beginAtZero:true}}
   }
 });
 
-// Area Graph (filled line)
-new Chart(document.getElementById('areaChart'), {
-  type: 'line',
-  data: {
-    labels: times,
-    datasets: [{
-      label: 'Area Graph',
-      data: timeSeries,
-      borderColor: 'rgba(102,179,255,1)',
-      backgroundColor: 'rgba(102,179,255,0.4)',
-      fill: true
-    }]
-  }
-});
-
-// Bubble Chart with Plotly.js
-Plotly.newPlot('bubbleDiv', [{
-  x: [1, 2, 3, 4],
-  y: values,
-  text: categories,
-  mode: 'markers',
-  marker: {
-    size: [23, 45, 12, 30],
-    color: ['#ff9999','#66b3ff','#99ff99','#ffcc99']
-  }
-}], {margin:{t:10}, title:'Bubble Chart', xaxis:{title:'X'}, yaxis:{title:'Y'}});
-
-// Dot Plot (each value as one dot, spaced out)
-const dotData = numericData.reduce((acc, val) => {
-  acc[val] = (acc[val] || 0) + 1;
-  return acc;
-}, {});
-new Chart(document.getElementById('dotChart'), {
-  type: 'bar',
-  data: {
-    labels: Object.keys(dotData),
-    datasets: [{
-      label: 'Dot Plot',
-      data: Object.values(dotData),
-      backgroundColor: 'rgba(0,128,255,0.6)'
-    }]
-  },
-  options: {
-    scales: {
-      y: {ticks: {stepSize: 1, beginAtZero: true}, max: Math.max(...Object.values(dotData))+1}
-    }
-  }
-});
-
-// Box Plot (uses BoxPlot plugin)
-new Chart(document.getElementById('boxChart'), {
-  type: 'boxplot',
-  data: {
-    labels: ['Sample'],
-    datasets: [{
-      label: 'Box Plot',
-      data: [numericData],
-      backgroundColor: 'orange',
-      borderColor: 'black'
-    }]
-  }
-});
-
-// Stem-and-Leaf Plot (as text)
-function stemLeafText(data) {
-  const sorted = data.slice().sort((a,b)=>a-b);
-  const stems = {};
+// Stem-and-Leaf Plot (text representation)
+function stemLeaf(data) {
+  let sorted = data.slice().sort((a,b)=>a-b);
+  let stems = {};
   sorted.forEach(num => {
-    const stem = Math.floor(num/10);
-    const leaf = num%10;
-    if (!stems[stem]) stems[stem] = [];
+    let stem = Math.floor(num/10);
+    let leaf = num%10;
+    stems[stem] = stems[stem] || [];
     stems[stem].push(leaf);
   });
-  let text = 'Stem | Leaves\n';
-  Object.keys(stems).forEach(stem => {
-    text += (stem + '    | ' + stems[stem].join(' ') + '\n');
+  let text = 'Stem | Leaves\n------------\n';
+  Object.keys(stems).sort().forEach(stem => {
+    text += `${stem}    | ${stems[stem].join(' ')}\n`;
   });
   return text;
 }
-document.getElementById('stemLeaf').textContent = stemLeafText(numericData);
+document.getElementById('stemLeaf').textContent = stemLeaf(numericData);
 
-// Frequency Polygon (line graph on midpoints of bins)
-const fpMidpoints = [15, 25, 35, 45, 55];
-new Chart(document.getElementById('freqPolyChart'), {
-  type: 'line',
+// Dot Plot (each value is a dot in a scatter chart)
+const dotPoints = numericData.map((v,i) => ({x:v, y:1 + (i%10)*0.15}));
+new Chart(document.getElementById('dotPlot'), {
+  type: 'scatter',
   data: {
-    labels: fpMidpoints,
     datasets: [{
-      label: 'Frequency Polygon',
-      data: histCounts,
-      fill: false,
-      borderColor: 'brown',
-      tension: 0
-    }]
-  }
-});
-
-// Time Series Graph
-new Chart(document.getElementById('timeSeriesChart'), {
-  type: 'line',
-  data: {
-    labels: times,
-    datasets: [{
-      label: 'Time Series',
-      data: timeSeries,
-      borderColor: 'gray',
-      fill: false
-    }]
-  }
-});
-
-// Pareto Chart (bar and line overlaid)
-const paretoLabels = ['Error A','Error B','Error C','Error D'];
-const paretoCounts = [15,10,7,4];
-const paretoPercent = [];
-let sum = 0;
-paretoCounts.forEach((v,i) => {
-  sum += v;
-  paretoPercent.push((sum/paretoCounts.reduce((a,b)=>a+b))*100);
-});
-new Chart(document.getElementById('paretoChart'), {
-  type: 'bar',
-  data: {
-    labels: paretoLabels,
-    datasets: [{
-      label: 'Frequency',
-      data: paretoCounts,
-      backgroundColor: 'rgba(255,188,66,0.7)'
-    }, {
-      label: 'Cumulative (%)',
-      data: paretoPercent,
-      type: 'line',
-      borderColor: 'blue',
-      fill: false,
-      yAxisID: 'percent'
+      label: 'Dot Plot',
+      data: dotPoints,
+      backgroundColor: 'rgb(100, 200, 100)'
     }]
   },
   options: {
+    plugins:{legend:{display:false}},
     scales: {
-      y: {beginAtZero: true},
-      percent: {position: 'right', type: 'linear', min:0, max:100}
+      x: { title:{display:true,text:'Value'}, min: Math.min(...numericData)-1, max: Math.max(...numericData)+1 },
+      y: { display:false }
     }
   }
 });
+
+// Box-and-Whisker Plot
+new Chart(document.getElementById('boxPlot'), {
+  type: 'boxplot',
+  data: {
+    labels: ['Data'],
+    datasets: [{
+      label: 'Data',
+      data: [numericData],
+      backgroundColor: 'rgba(255,188,66,0.7)'
+    }]
+  },
+  options: {
+    plugins: {legend:{display:false}},
+    scales: {y: {title:{display:true,text:'Value'}}}
+  }
+});
+
 </script>
 </body>
 </html>
