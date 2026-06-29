@@ -1,85 +1,195 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Integrated Data Graph Showcase</title>
+  <title>Integrated Data Graphs and Plots Showcase</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Chart.js Box Plot Plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-box-and-violin-plot@4.0.1/build/Chart.BoxPlot.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     .chart-container { display: flex; flex-wrap: wrap; }
-    .chart-block { margin: 18px; width: 430px; }
-    pre { background: #f7f7f7; padding: 10px; border-radius: 4px; font-size: 1.1em;}
+    .chart-block { margin: 18px; width: 420px; }
+    pre { background: #f7f7f7; padding: 10px; border-radius: 4px; font-size: 1.05em;}
     .title { font-weight: bold; margin-bottom: 4px; }
     .desc { font-size: 0.95em; color: #555; }
+    svg.venn-svg { margin-top: 14px; }
   </style>
 </head>
 <body>
-  <h2>Integrated Data Graph Showcase</h2>
-  <div class="chart-container">
-    <!-- Column Graph -->
-    <div class="chart-block">
-      <div class="title">Column Graph (Bar Chart) - Categorical Data</div>
-      <canvas id="columnChart"></canvas>
-      <div class="desc">Vertical bars for discrete categories; bars separated.</div>
-    </div>
+<h2>Integrated Data Graphs and Plots</h2>
+<div class="chart-container">
 
-    <!-- Histogram -->
-    <div class="chart-block">
-      <div class="title">Histogram - Continuous Data</div>
-      <canvas id="histChart"></canvas>
-      <div class="desc">Adjacent bars for numeric intervals; no gaps between bars.</div>
-    </div>
-
-    <!-- Box and Whisker Plot -->
-    <div class="chart-block">
-      <div class="title">Box and Whisker Plot</div>
-      <canvas id="boxPlot"></canvas>
-      <div class="desc">Shows quartiles, median, spread, and outliers.</div>
-    </div>
-
-    <!-- Dot Plot -->
-    <div class="chart-block">
-      <div class="title">Dot Plot</div>
-      <canvas id="dotPlot"></canvas>
-      <div class="desc">Each dot represents an individual data value.</div>
-    </div>
-
-    <!-- Stem-and-Leaf Plot -->
-    <div class="chart-block">
-      <div class="title">Stem-and-Leaf Plot</div>
-      <pre id="stemLeaf"></pre>
-      <div class="desc">Shows distribution while preserving original values.</div>
-    </div>
+  <div class="chart-block">
+    <div class="title">Bar Graph (Horizontal, Discrete Data)</div>
+    <canvas id="barChart"></canvas>
+    <div class="desc">Compare discrete categories. Bars separated.</div>
   </div>
+
+  <div class="chart-block">
+    <div class="title">Column Graph (Vertical)</div>
+    <canvas id="columnChart"></canvas>
+    <div class="desc">Vertical bars, like bar graph, for discrete categories.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Line Graph</div>
+    <canvas id="lineChart"></canvas>
+    <div class="desc">Shows trends over time.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Pie Chart</div>
+    <canvas id="pieChart"></canvas>
+    <div class="desc">Portions/percent of a whole.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Histogram (No Gaps)</div>
+    <canvas id="histChart"></canvas>
+    <div class="desc">Distribution of continuous numerical data (bins adjacent).</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Scatter Plot</div>
+    <canvas id="scatterPlot"></canvas>
+    <div class="desc">Relationship between two numeric variables.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Area Graph</div>
+    <canvas id="areaChart"></canvas>
+    <div class="desc">Quantities over time, area filled under line.</div>
+  </div>
+
+  <div class="chart-block" id="bubbleDiv">
+    <div class="title">Bubble Chart</div>
+    <div class="desc">Visualises three variables: x, y, size.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Dot Plot</div>
+    <canvas id="dotPlot"></canvas>
+    <div class="desc">Uses dots for frequencies/values.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Box and Whisker Plot (Box Plot)</div>
+    <canvas id="boxPlot"></canvas>
+    <div class="desc">Spread, quartiles, median, outliers.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Stem-and-Leaf Plot</div>
+    <pre id="stemLeaf"></pre>
+    <div class="desc">Distribution, keeps actual values.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Frequency Polygon</div>
+    <canvas id="freqPoly"></canvas>
+    <div class="desc">Line connecting midpoints of histogram bins.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Time Series Graph</div>
+    <canvas id="timeSeries"></canvas>
+    <div class="desc">Data over intervals/time.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Venn Diagram</div>
+    <svg width="220" height="160" class="venn-svg">
+      <ellipse cx="90" cy="80" rx="60" ry="50" fill="#ffb3a7" fill-opacity="0.5"/>
+      <ellipse cx="140" cy="80" rx="60" ry="50" fill="#a7ceff" fill-opacity="0.5"/>
+      <text x="65" y="50" font-size="14">A</text>
+      <text x="145" y="50" font-size="14">B</text>
+      <text x="110" y="80" font-size="15">A ∩ B</text>
+    </svg>
+    <div class="desc">Relationships/intersection between sets.</div>
+  </div>
+
+  <div class="chart-block">
+    <div class="title">Pareto Chart</div>
+    <canvas id="paretoChart"></canvas>
+    <div class="desc">Bar chart sorted, cumulative % shows overall effect.</div>
+  </div>
+
+</div>
 
 <script>
 // Sample Data
 const categories = ['A', 'B', 'C', 'D'];
-const values = [23, 45, 12, 30];                         // For Column Graph
-const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45]; // For Histogram, Dot, Box, Stem-and-Leaf
+const values = [23, 45, 12, 30];
+const numericData = [23, 45, 12, 30, 23, 45, 30, 12, 12, 23, 45];
+const times = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const timeSeries = [5, 10, 7, 13, 9, 14];
 
-// Column Graph: Discrete Categories
+// 1. Bar Graph (Horizontal)
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: categories,
+    datasets: [{
+      label: 'Bar Graph',
+      data: values,
+      backgroundColor: 'rgba(102,179,255,0.7)'
+    }]
+  },
+  options: { indexAxis: 'y', plugins:{legend:{display:false}},
+    scales: { x: { title:{display:true,text:'Value'},beginAtZero:true}, y:{ title:{display:true,text:'Category'} } } }
+  }
+);
+
+// 2. Column Graph (Vertical)
 new Chart(document.getElementById('columnChart'), {
   type: 'bar',
   data: {
     labels: categories,
     datasets: [{
-      label: 'Count',
+      label: 'Column Chart',
       data: values,
-      backgroundColor: 'rgba(91,192,222,0.7)'
+      backgroundColor: 'rgba(255,179,102,0.7)'
     }]
   },
-  options: {
-    plugins: { legend: { display: false }},
-    scales: { 
-      x: { title: { display: true, text: 'Category' }},
-      y: { title: { display: true, text: 'Value'}, beginAtZero: true }
+  options: { plugins:{legend:{display:false}},
+    scales: { x:{ title:{display:true,text:'Category'} }, y:{ title:{display:true,text:'Value'},beginAtZero:true } } }
+  }
+);
+
+// 3. Line Graph
+new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: times,
+    datasets: [{
+      label: 'Line Graph',
+      data: timeSeries,
+      borderColor: 'green',
+      fill: false,
+      tension: 0.2
+    }]
+  },
+  options: { plugins:{legend:{display:false}},
+    scales: { x: { title:{display:true,text:'Time'} }, y:{ title:{display:true,text:'Value'},beginAtZero:true } }
     }
   }
+);
+
+// 4. Pie Chart
+new Chart(document.getElementById('pieChart'), {
+  type: 'pie',
+  data: {
+    labels: categories,
+    datasets: [{
+      label: 'Pie Chart',
+      data: values,
+      backgroundColor: ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+    }]
+  },
+  options: { plugins:{legend:{position:'bottom'}} }
 });
 
-// Histogram: Continuous Data, No Gaps
-const binRanges = ['10-19','20-29','30-39','40-49'];
+// 5. Histogram (no gaps)
+const histLabels = ['10-19','20-29','30-39','40-49'];
 const histCounts = [
   numericData.filter(x => x >=10 && x<20).length,
   numericData.filter(x => x >=20 && x<30).length,
@@ -89,7 +199,7 @@ const histCounts = [
 new Chart(document.getElementById('histChart'), {
   type: 'bar',
   data: {
-    labels: binRanges,
+    labels: histLabels,
     datasets: [{
       label: 'Frequency',
       data: histCounts,
@@ -99,39 +209,71 @@ new Chart(document.getElementById('histChart'), {
   },
   options: {
     plugins: { legend: { display: false }},
-    scales: { 
-      x: { 
-        title: { display: true, text: 'Interval/Bin' },
-        // No grouping, no category spacing (these settings remove gaps)
-        grid: { display: false }
-      },
-      y: { title: { display: true, text: 'Count' }, beginAtZero: true },
+    scales: {
+      x: { title: { display: true, text: 'Interval/Bin' }, grid: { display: false } },
+      y: { title: { display: true, text: 'Count' }, beginAtZero:true }
     },
-    categoryPercentage: 1.0, // these options help ensure bars are adjacent
-    barPercentage: 1.0,
+    categoryPercentage: 1.0,
+    barPercentage: 1.0
   }
 });
 
-// Box and Whisker Plot
-new Chart(document.getElementById('boxPlot'), {
-  type: 'boxplot',
+// 6. Scatter Plot
+new Chart(document.getElementById('scatterPlot'), {
+  type: 'scatter',
   data: {
-    labels: ['Sample'],
     datasets: [{
-      label: 'Data',
-      data: [numericData],
-      backgroundColor: 'rgba(255,188,66,0.7)'
+      label: 'Scatter Plot',
+      data: [
+        {x: 1, y: 23}, {x: 2, y: 45}, {x: 3, y: 12}, {x: 4, y: 30}
+      ],
+      backgroundColor: 'red'
     }]
   },
   options: {
-    plugins: { legend: { display: false }},
-    scales: { y: { title: { display: true, text: 'Value'}, beginAtZero: false } }
+    plugins:{legend:{display:false}},
+    scales: {
+      x: { type: 'linear', position: 'bottom', title: {display:true,text:'X'} },
+      y: { title:{display:true,text:'Y'} }
+    }
   }
 });
 
-// Dot Plot: Each value shown as a dot (simulate using scatter plot)
+// 7. Area Graph
+new Chart(document.getElementById('areaChart'), {
+  type: 'line',
+  data: {
+    labels: times,
+    datasets: [{
+      label: 'Area Graph',
+      data: timeSeries,
+      borderColor: 'rgba(102,179,255,1)',
+      backgroundColor: 'rgba(102,179,255,0.4)',
+      fill: true,
+      tension: 0.1
+    }]
+  },
+  options: { plugins:{legend:{display:false}},
+    scales: { x: { title:{display:true,text:'Time'} }, y:{ title:{display:true,text:'Value'},beginAtZero:true } }
+    }
+  }
+);
+
+// 8. Bubble Chart (Plotly)
+Plotly.newPlot('bubbleDiv', [{
+  x: [1, 2, 3, 4],
+  y: values,
+  text: categories,
+  mode: 'markers',
+  marker: {
+    size: [23, 45, 12, 30],
+    color: ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+  }
+}], {margin:{t:10}, title:'Bubble Chart', xaxis:{title:'X'}, yaxis:{title:'Y'}});
+
+// 9. Dot Plot
 const dotPoints = numericData.map((v,i) => ({
-  x: v, y: 1 + (i % 10) * 0.18 // Rash offset for vertical stacking
+  x: v, y: 1 + (i % 10) * 0.18
 }));
 new Chart(document.getElementById('dotPlot'), {
   type: 'scatter',
@@ -151,7 +293,24 @@ new Chart(document.getElementById('dotPlot'), {
   }
 });
 
-// Stem-and-Leaf Plot: Improved display (true-to-form)
+// 10. Box and Whisker Plot (Box Plot)
+new Chart(document.getElementById('boxPlot'), {
+  type: 'boxplot',
+  data: {
+    labels: ['Data'],
+    datasets: [{
+      label: 'Data',
+      data: [numericData],
+      backgroundColor: 'rgba(255,188,66,0.7)'
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false }},
+    scales: { y: { title: { display: true, text: 'Value'} } }
+  }
+});
+
+// 11. Stem-and-Leaf Plot (as text)
 function stemLeaf(data) {
   let sorted = data.slice().sort((a,b)=>a-b);
   let stems = {};
@@ -169,6 +328,76 @@ function stemLeaf(data) {
 }
 document.getElementById('stemLeaf').textContent = stemLeaf(numericData);
 
+// 12. Frequency Polygon (midpoints of bins)
+const fpMidpoints = [14.5, 24.5, 34.5, 44.5];
+new Chart(document.getElementById('freqPoly'), {
+  type: 'line',
+  data: {
+    labels: fpMidpoints,
+    datasets: [{
+      label: 'Frequency Polygon',
+      data: histCounts,
+      fill: false,
+      borderColor: 'brown',
+      tension: 0
+    }]
+  },
+  options: {
+    plugins:{legend:{display:false}},
+    scales: { x: { title:{display:true,text:'Midpoint'} }, y:{ title:{display:true,text:'Frequency'},beginAtZero:true } }
+  }
+});
+
+// 13. Time Series Graph
+new Chart(document.getElementById('timeSeries'), {
+  type: 'line',
+  data: {
+    labels: times,
+    datasets: [{
+      label: 'Time Series',
+      data: timeSeries,
+      borderColor: 'gray',
+      fill: false
+    }]
+  },
+  options: {
+    plugins:{legend:{display:false}},
+    scales: { x: { title:{display:true,text:'Time'} }, y:{ title:{display:true,text:'Value'},beginAtZero:true } }
+  }
+});
+
+// 14. Pareto Chart (Bar + Line overlay)
+const paretoLabels = ['Error A','Error B','Error C','Error D'];
+const paretoCounts = [15,10,7,4];
+const total = paretoCounts.reduce((a,b)=>a+b);
+const paretoPercent = [];
+let sum = 0;
+paretoCounts.forEach((v,i) => { sum += v; paretoPercent.push((sum/total)*100); });
+new Chart(document.getElementById('paretoChart'), {
+  type: 'bar',
+  data: {
+    labels: paretoLabels,
+    datasets: [{
+      label: 'Frequency',
+      data: paretoCounts,
+      backgroundColor: 'rgba(255,188,66,0.7)'
+    }, {
+      label: 'Cumulative (%)',
+      data: paretoPercent,
+      type: 'line',
+      borderColor: 'blue',
+      fill: false,
+      yAxisID: 'percent'
+    }]
+  },
+  options: {
+    plugins:{legend:{display:true}},
+    scales: {
+      y: { beginAtZero: true, title:{display:true,text:'Count'} },
+      percent: { position: 'right', type: 'linear', min:0, max:100, title:{display:true,text:'Cumulative (%)'} }
+    }
+  }
+});
 </script>
 </body>
 </html>
